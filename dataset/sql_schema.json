@@ -13,7 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "SQL scripts/create schema scripts",
+				"folderPath": "SQL_scripts/create_schema_scripts",
 				"container": "dev1"
 			},
 			"columnDelimiter": ",",

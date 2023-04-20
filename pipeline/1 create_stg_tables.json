@@ -47,7 +47,7 @@
 				"typeProperties": {
 					"variableName": "fileName",
 					"value": {
-						"value": "@concat('https://blobetl6.blob.core.windows.net/dev1 / SQL scripts / create schema scripts',activity('Get List of files').output.itemName)",
+						"value": "@concat('https://blobetl6.blob.core.windows.net/dev1/SQL_scripts/create_schema_scripts/',activity('Get List of files').output.itemName)",
 						"type": "Expression"
 					}
 				}
