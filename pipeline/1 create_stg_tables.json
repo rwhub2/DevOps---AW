@@ -20,7 +20,7 @@
 						"type": "DatasetReference"
 					},
 					"fieldList": [
-						"childItems"
+						"itemName"
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
@@ -49,6 +49,41 @@
 					"value": {
 						"value": "@concat('https://blobetl6.blob.core.windows.net/dev1/SQL_scripts/create_schema_scripts/',activity('Get List of files').output.itemName)",
 						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "File Name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@variables('fileName')",
+						"type": "Expression"
+					},
+					"method": "GET",
+					"headers": {
+						"x-ms-version": "2017-11-09",
+						"xs-ms-blob-type": "BlockBlob"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://storage.azure.com/"
 					}
 				}
 			}

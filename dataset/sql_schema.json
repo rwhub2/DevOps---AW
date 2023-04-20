@@ -13,6 +13,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "df_create_schema.sql",
 				"folderPath": "SQL_scripts/create_schema_scripts",
 				"container": "dev1"
 			},
