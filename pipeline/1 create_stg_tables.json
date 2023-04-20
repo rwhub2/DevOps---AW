@@ -24,6 +24,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -46,7 +47,7 @@
 				"typeProperties": {
 					"variableName": "fileName",
 					"value": {
-						"value": "@activity('Get List of files').output.childItems",
+						"value": "@concat('https://blobetl6.blob.core.windows.net/dev1 / SQL scripts / create schema scripts',activity('Get List of files').output.itemName)",
 						"type": "Expression"
 					}
 				}
