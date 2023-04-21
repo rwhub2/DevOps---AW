@@ -344,7 +344,7 @@
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "Web1",
+								"activity": "sqlScriptSchema",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -362,7 +362,7 @@
 							"source": {
 								"type": "AzureSqlSource",
 								"sqlReaderQuery": {
-									"value": "@concat(concat('DECLARE @sql nvarchar(5000); SET @sql = ','''',activity('Web1').output.Response, '''', ' EXEC sp_executesql @sql'), ' SELECT 1 AS ROW')",
+									"value": "@concat(variables('sqlScript1'), ' SELECT 1 AS row')",
 									"type": "Expression"
 								},
 								"queryTimeout": "02:00:00",
@@ -375,6 +375,26 @@
 							},
 							"firstRowOnly": false
 						}
+					},
+					{
+						"name": "sqlScriptSchema",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Web1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "sqlScript1",
+							"value": {
+								"value": "@concat('DECLARE @sql nvarchar(5000); SET @sql = ','''',activity('Web1').output.Response, '''', ' EXEC sp_executesql @sql')",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -383,6 +403,9 @@
 				},
 				"variables": {
 					"fileName": {
+						"type": "String"
+					},
+					"sqlScript1": {
 						"type": "String"
 					}
 				},
