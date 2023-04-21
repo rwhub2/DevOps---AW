@@ -1,5 +1,5 @@
 {
-	"name": "1 create_stg_tables",
+	"name": "1 create_stg_schemas",
 	"properties": {
 		"activities": [
 			{
@@ -138,7 +138,7 @@
 				"typeProperties": {
 					"variableName": "sqlScript1",
 					"value": {
-						"value": "@concat('DECLARE @sql nvarchar(5000); SET @sql = ','''',activity('Web1').output.Response,'''',' EXEC sp_executesql @sql;')",
+						"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web1').output.Response,'''',' EXEC sp_executesql @sql;')",
 						"type": "Expression"
 					}
 				}
