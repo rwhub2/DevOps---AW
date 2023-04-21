@@ -21,7 +21,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/1 create_stg_tables')]",
+			"name": "[concat(parameters('factoryName'), '/1 create_stg_schemas')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -164,7 +164,7 @@
 						"typeProperties": {
 							"variableName": "sqlScript1",
 							"value": {
-								"value": "@concat('DECLARE @sql nvarchar(5000); SET @sql = ','''',activity('Web1').output.Response,'''',' EXEC sp_executesql @sql;')",
+								"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web1').output.Response,'''',' EXEC sp_executesql @sql;')",
 								"type": "Expression"
 							}
 						}
