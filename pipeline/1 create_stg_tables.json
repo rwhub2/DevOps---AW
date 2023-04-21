@@ -110,7 +110,7 @@
 					"source": {
 						"type": "AzureSqlSource",
 						"sqlReaderQuery": {
-							"value": "@concat(concat('DECLARE @sql nvarchar(5000); SET @sql = ','''',activity('Web1').output.Response, '''', ' EXEC sp_executesql @sql;', ' SELECT 1 AS row'))",
+							"value": "@concat(concat('DECLARE @sql nvarchar(5000); SET @sql = ','''',activity('Web1').output.Response, '''', ' EXEC sp_executesql @sql'), ' SELECT 1 AS ROW')",
 							"type": "Expression"
 						},
 						"queryTimeout": "02:00:00",
