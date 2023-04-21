@@ -89,7 +89,7 @@
 									{
 										"type": "Query",
 										"text": {
-											"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web2').output.Response,'''',' EXEC sp_executesql @sql; SELECT 1 AS ROW')",
+											"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web2').output.Response,'''',' EXEC sp_executesql @sql')",
 											"type": "Expression"
 										}
 									}

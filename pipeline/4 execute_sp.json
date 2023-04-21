@@ -1,0 +1,58 @@
+{
+	"name": "4 execute_sp",
+	"properties": {
+		"activities": [
+			{
+				"name": "create_dim_customer_sp",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[create_dim_customer_sp]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "create_dim_tables_sp",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "create_dim_customer_sp",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[create_dim_tables_sp]"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "stagingPipeline"
+		},
+		"annotations": []
+	}
+}
