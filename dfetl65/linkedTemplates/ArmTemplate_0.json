@@ -87,6 +87,136 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/3 create_stg_tables')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('fileName')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Set variable1",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "urlString",
+										"value": {
+											"value": "@concat('https://blobetl6.blob.core.windows.net/dev1/SQL_scripts/create_tables_scripts/',item())",
+											"type": "Expression"
+										}
+									}
+								},
+								{
+									"name": "Web2",
+									"type": "WebActivity",
+									"dependsOn": [
+										{
+											"activity": "Set variable1",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"url": {
+											"value": "@variables('urlString')",
+											"type": "Expression"
+										},
+										"method": "GET",
+										"headers": {
+											"x-ms-version": "2017-11-09",
+											"xs-ms-blob-type": "BlockBlob"
+										},
+										"authentication": {
+											"type": "MSI",
+											"resource": "https://storage.azure.com/"
+										}
+									}
+								},
+								{
+									"name": "Script1",
+									"type": "Script",
+									"dependsOn": [
+										{
+											"activity": "Web2",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "AzureSqlDatabase1",
+										"type": "LinkedServiceReference"
+									},
+									"typeProperties": {
+										"scripts": [
+											{
+												"type": "Query",
+												"text": {
+													"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web2').output.Response,'''',' EXEC sp_executesql @sql; SELECT 1 AS ROW')",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"fileName": {
+						"type": "Array",
+						"defaultValue": [
+							"df_create_dimCustomer.sql",
+							"df_create_dimTables.sql"
+						]
+					},
+					"urlString": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "stagingPipeline"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/TabledimCustomer')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -487,136 +617,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/sql_schema')]",
-				"[concat(variables('factoryId'), '/datasets/TabledimCustomer')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/3 create_stg_tables')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ForEach1",
-						"type": "ForEach",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('fileName')",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Set variable1",
-									"type": "SetVariable",
-									"dependsOn": [],
-									"userProperties": [],
-									"typeProperties": {
-										"variableName": "urlString",
-										"value": {
-											"value": "@concat('https://blobetl6.blob.core.windows.net/dev1/SQL_scripts/create_tables_scripts/',item())",
-											"type": "Expression"
-										}
-									}
-								},
-								{
-									"name": "Web2",
-									"type": "WebActivity",
-									"dependsOn": [
-										{
-											"activity": "Set variable1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"url": {
-											"value": "@variables('urlString')",
-											"type": "Expression"
-										},
-										"method": "GET",
-										"headers": {
-											"x-ms-version": "2017-11-09",
-											"xs-ms-blob-type": "BlockBlob"
-										},
-										"authentication": {
-											"type": "MSI",
-											"resource": "https://storage.azure.com/"
-										}
-									}
-								},
-								{
-									"name": "Lookup1",
-									"type": "Lookup",
-									"dependsOn": [
-										{
-											"activity": "Web2",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"source": {
-											"type": "AzureSqlSource",
-											"sqlReaderQuery": {
-												"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web2').output.Response,'''',' EXEC sp_executesql @sql; SELECT 1 AS ROW')",
-												"type": "Expression"
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"dataset": {
-											"referenceName": "TabledimCustomer",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
-									}
-								}
-							]
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"variables": {
-					"fileName": {
-						"type": "Array",
-						"defaultValue": [
-							"df_create_dimCustomer.sql",
-							"df_create_dimTables.sql"
-						]
-					},
-					"urlString": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "stagingPipeline"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/TabledimCustomer')]"
 			]
 		}

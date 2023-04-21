@@ -298,8 +298,8 @@
 									}
 								},
 								{
-									"name": "Lookup1",
-									"type": "Lookup",
+									"name": "Script1",
+									"type": "Script",
 									"dependsOn": [
 										{
 											"activity": "Web2",
@@ -316,21 +316,21 @@
 										"secureInput": false
 									},
 									"userProperties": [],
+									"linkedServiceName": {
+										"referenceName": "AzureSqlDatabase1",
+										"type": "LinkedServiceReference"
+									},
 									"typeProperties": {
-										"source": {
-											"type": "AzureSqlSource",
-											"sqlReaderQuery": {
-												"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web2').output.Response,'''',' EXEC sp_executesql @sql; SELECT 1 AS ROW')",
-												"type": "Expression"
-											},
-											"queryTimeout": "02:00:00",
-											"partitionOption": "None"
-										},
-										"dataset": {
-											"referenceName": "TabledimCustomer",
-											"type": "DatasetReference",
-											"parameters": {}
-										}
+										"scripts": [
+											{
+												"type": "Query",
+												"text": {
+													"value": "@concat('DECLARE @sql nvarchar(4000); SET @sql = ','''',activity('Web2').output.Response,'''',' EXEC sp_executesql @sql; SELECT 1 AS ROW')",
+													"type": "Expression"
+												}
+											}
+										],
+										"scriptBlockExecutionTimeout": "02:00:00"
 									}
 								}
 							]
@@ -359,7 +359,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/TabledimCustomer')]"
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
