@@ -4,6 +4,7 @@
 		"activities": [
 			{
 				"name": "create_dim_customer_sp",
+				"description": "heloo",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
